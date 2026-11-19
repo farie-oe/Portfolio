@@ -1,0 +1,97 @@
+:root {
+  color-scheme: light;
+
+  --font-display: 'DynaPuff', system-ui, sans-serif;
+  --font-sans: 'Nunito', system-ui, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', Consolas, monospace;
+
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --r-win: 16px;
+  --r-card: 14px;
+  --r-sm: 10px;
+  --bar-h: 32px;
+
+  --midnight: #030b19;
+  --berry-peel: #143d5b;
+  --frosted: #e4f3f4;
+  --text: #0b2036;
+  --text-muted: #3f6684;
+  --heading: #143d5b;
+  --hl: #143d5b;
+  --hl-2: #4f81aa;
+  --panel: #f3fafb;
+  --panel-2: #e4f3f4;
+  --bar: #dceef5;
+  --line: #b7d6e6;
+  --line-active: #4f81aa;
+  --accent: #800020;
+  --accent-hover: #b0303c;
+  --accent-ink: #ffffff;
+  --btn-bg: #800020;
+  --btn-bd: #b0303c;
+  --btn-hover: #b0303c;
+  --btn-ink: #ffffff;
+  --focus: #4f81aa;
+  --pr-sign: #b0303c;
+
+  --card: #ffffff;
+  --card-ink: #0b2036;
+  --card-muted: #476b85;
+  --card-line: #c5dfea;
+  --thumb-a: #d5e8f2;
+  --thumb-b: #e8ced2;
+  --thumb-c: #c3dcea;
+  --thumb-logo: #ffffff;
+  --thumb-line: rgba(11, 32, 54, 0.14);
+
+  --pastel-pink: #fcf0f0;
+  --pastel-pink-edge: #f0c4ce;
+  --pastel-sky: #e6f1fc;
+  --pastel-sky-edge: #b4d2ec;
+  --pastel-butter: #fcf4de;
+  --pastel-butter-edge: #eed9a0;
+  --pastel-mint: #eaf7ee;
+  --pastel-mint-edge: #bce0ca;
+  --pastel-peach: #fceee6;
+  --pastel-peach-edge: #efc8b0;
+  --accent-shadow: #5a0016;
+  --sleep-ink: #cfe6f2;
+
+  --sky-0: #4f81aa;
+  --sky-1: #74a9cc;
+  --sky-2: #91c9e2;
+  --sky-3: #bfe0ec;
+  --sky-4: #e4f3f4;
+  --star: #ffffff;
+  --star-k: 0.7;
+  --cloud-k: 2.8;
+
+  --bar-bg: rgba(255, 255, 255, 0.55);
+  --bar-border: rgba(20, 61, 91, 0.18);
+  --desk-label: #0b2036;
+  --desk-label-shadow: 0 1px 3px rgba(255, 255, 255, 0.85);
+  --shadow-win: 0 8px 24px rgba(20, 61, 91, 0.25);
+  --shadow-win-active: 0 14px 38px rgba(20, 61, 91, 0.38);
+
+  --modal-bg: #f3fafb;
+  --modal-bar: #fcf1cf;
+  --modal-bar-ink: #143d5b;
+  --modal-line: #f0dda0;
+  --modal-backdrop: rgba(11, 32, 54, 0.38);
+  --modal-ink: #0b2036;
+  --modal-muted: #476b85;
+  --modal-heading: #143d5b;
+  --quest-bg: #ffffff;
+  --quest-line: #f6e8be;
+  --quest-badge: #ebcd72;
+  --quest-badge-ink: #ffffff;
+  --quest-done-bg: #fff9e6;
+  --quest-done-line: #f0dda0;
+  --quest-done-badge: #ebcd72;
+  --quest-done-badge-ink: #ffffff;
+  --quest-done-muted: #6b5a2a;
+  --quest-hint: #6b5a2a;
+}

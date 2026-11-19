@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mafaro's Lab | Cyber Security Portfolio</title>
+    <meta
+      name="description"
+      content="Cyber security student portfolio: cryptography, networking and secure coding, on a cosy sky desktop with a flag hunt to find."
+    />
+    <link rel="icon" href="icons/about.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@500;700&family=JetBrains+Mono:wght@400;700&family=Nunito:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- psst. Flags look like flag{...}. Some are hidden in the sky, some in the terminal, and this one is in plain sight:
+       flag{view_source_victor}  ->  type  submit flag{view_source_victor}  in the terminal. -->
+  </head>
+  <body>
+    <div id="scene"></div>
+
+    <header id="menubar">
+      <div class="menu-left">
+        <button class="menu-logo" id="menu-logo" aria-label="About Mafaro">
+          <img src="icons/about.png" alt="" draggable="false" />
+        </button>
+        <strong class="menu-name" id="menu-name"></strong>
+      </div>
+      <div class="menu-right">
+        <button class="menu-flags" id="menu-flags" type="button" title="Flag hunt">
+          <img src="icons/flag.png" alt="" draggable="false" /> <b id="flag-count">0/0</b>
+        </button>
+        <time id="clock"></time>
+      </div>
+    </header>
+
+    <main id="desktop">
+      <nav id="desk-icons" aria-label="Desktop"></nav>
+      <div id="windows"></div>
+      <div id="toasts" aria-live="polite"></div>
+    </main>
+
+    <nav id="dock" aria-label="Dock"></nav>
+    <div id="cat" aria-live="polite">
+      <div id="cat-bubble" role="status"></div>
+      <button id="cat-btn" type="button" aria-label="The lab cat. Click to say hello.">
+        <img src="icons/about.png" alt="" draggable="false" />
+      </button>
+    </div>
+    <div id="modal-root"></div>
+
+    <script src="js/data.js"></script>
+    <script src="js/core.js"></script>
+    <script src="js/windows.js"></script>
+    <script src="js/flags.js"></script>
+    <script src="js/sky.js"></script>
+    <script src="js/skills.js"></script>
+    <script src="js/apps.js"></script>
+    <script src="js/explorer.js"></script>
+    <script src="js/terminal-commands.js"></script>
+    <script src="js/terminal.js"></script>
+    <script src="js/welcome.js"></script>
+    <script src="js/cat.js"></script>
+    <script src="js/power.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
