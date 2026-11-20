@@ -115,18 +115,11 @@
   });
 
   readers['~/about.txt'] = () => [[P.about.greeting, 'strong'], ...P.about.paragraphs];
-  readers['~/skills.txt'] = () => {
-    const { demonstrated, exploring } = Skills.partition();
-    return [
-      ['Demonstrated skills', demonstrated],
-      ['Currently exploring', exploring],
-    ].flatMap(([title, groups]) => [
-      [title, 'strong'],
-      ...groups.map(
-        (group) => `  ${group.group}: ${group.items.map((skill) => skill.name).join(', ')}`,
-      ),
+  readers['~/skills.txt'] = () =>
+    P.skills.flatMap((group) => [
+      [group.group, 'strong'],
+      '  ' + group.items.map((skill) => skill.name).join(', '),
     ]);
-  };
   readers['~/contact.txt'] = () =>
     P.contact.links.map((link) => `${link.label.padEnd(9)} ${link.value}`);
   readers['~/note.txt'] = () => [
@@ -292,18 +285,11 @@
       printLines(ctx, readers['~/about.txt']());
     },
     skills(ctx) {
-      const { demonstrated, exploring } = Skills.partition();
-      [
-        ['Demonstrated skills', demonstrated],
-        ['Currently exploring', exploring],
-      ].forEach(([title, groups]) => {
-        ctx.print(title, 'strong');
-        groups.forEach((group) => {
-          ctx.print('  ' + group.group, 'dim');
-          group.items.forEach((skill) => {
-            const detail = skill.sub ? ': ' + skill.sub.join(', ') : '';
-            ctx.print('    - ' + skill.name + detail);
-          });
+      P.skills.forEach((group) => {
+        ctx.print(group.group, 'strong');
+        group.items.forEach((skill) => {
+          const detail = skill.sub ? ': ' + skill.sub.join(', ') : '';
+          ctx.print('  - ' + skill.name + detail);
         });
       });
     },

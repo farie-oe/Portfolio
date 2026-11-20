@@ -965,24 +965,7 @@ a {
   display: grid;
   gap: var(--s-4);
 }
-.skills-part {
-  display: grid;
-  gap: var(--s-3);
-}
-.skills-part + .skills-part {
-  margin-top: var(--s-2);
-  padding-top: var(--s-4);
-  border-top: 1px solid var(--line);
-}
-.win-body .skills-part-title {
-  margin: 0;
-  font: 600 17px var(--font-display);
-  color: var(--heading);
-}
-.skills-part > .meta {
-  margin: -6px 0 0;
-}
-.stat-group h4 {
+.stat-group h3 {
   font-size: 15px;
   margin: 0 0 4px;
 }
@@ -1053,41 +1036,6 @@ button.skill-pill {
 }
 .sub-tray[hidden] {
   display: none;
-}
-.skill-pill.exploring {
-  color: var(--text-muted);
-  background: transparent;
-  border-style: dashed;
-  box-shadow: none;
-}
-.skill-pill.exploring:hover {
-  box-shadow: none;
-}
-.evidence {
-  display: flex;
-  flex-basis: 100%;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-}
-.evidence b {
-  font: 700 11.5px var(--font-mono);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-.evidence-link {
-  padding: 3px 11px;
-  font: 700 12.5px var(--font-sans);
-  color: var(--accent);
-  background: #fff;
-  border: 1.5px solid var(--bd);
-  border-radius: 99px;
-  cursor: pointer;
-}
-.evidence-link:hover,
-.evidence-link:focus-visible {
-  background: var(--panel-2);
 }
 .sub-bubble {
   padding: 3px 11px;
