@@ -1,24 +1,10 @@
 (function () {
   const N = NETWORKING;
   const { paragraph, bulletList, tagList } = Apps.ui;
+  const { block, header } = Detail;
   const ABOUT_KEY = 'about';
 
   const findCategory = (id) => N.categories.find((category) => category.id === id);
-
-  function block(title, content) {
-    return content ? h('section', { class: 'rs-sec' }, h('h4', null, title), content) : null;
-  }
-
-  function header({ eyebrow, title, lede, actions }) {
-    return h(
-      'header',
-      { class: 'rs-head' },
-      h('p', { class: 'rs-eyebrow' }, eyebrow),
-      h('h3', { class: 'rs-title' }, title),
-      lede ? h('p', { class: 'rs-lede' }, lede) : null,
-      actions,
-    );
-  }
 
   function download(exercise) {
     const { src, name } = exercise.file;

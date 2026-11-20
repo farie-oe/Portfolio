@@ -114,7 +114,7 @@
       title: 'All flags found!',
       text: [
         'You found everything! Thanks for playing along. Continue to explore ',
-        inlineLink('more', 'work'),
+        inlineLink('more', 'projects'),
         ", or reach out to me and let's ",
         inlineLink('connect', 'contact'),
         '!',

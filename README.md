@@ -10,22 +10,22 @@ in a browser, or serve the folder with any static host.
 index.html            page shell and script order
 css/tokens.css        colours, fonts and spacing variables
 css/style.css         all component styles
-js/data.js            every piece of content: apps, projects, certs, skills, flags
+js/data.js            content: apps, folder groups, projects, certs, skills, flags
 js/core.js            small shared helpers: event bus, saved state, DOM builder, popup menus
 js/windows.js         window manager: open, close, minimise, drag, full size
 js/main.js            start-up, desktop icons, dock, clock
-js/apps.js            Project details, Certs, About and Contact windows
-js/research.js        Research window: report cards and the in-window detail view
+js/apps.js            Certs, About and Contact windows, the PDF reader, Apps.open/project/cert
+js/detail.js          project detail view shown inside the explorer (reports and personal projects)
 js/networking-data.js Networking content: categories, exercises, topologies, tables
 js/networking.js      Networking Labs views shown inside the Projects explorer
 js/topology.js        draws a topology as SVG from nodes and links
-js/skills.js          Skills window
+js/skills.js          Skills window: demonstrated skills with evidence, and skills being explored
 js/explorer.js        Projects file explorer: folders, subfolders, files, breadcrumbs
 js/flags.js           flag hunt state and the Flag Hunt panel
 js/sky.js             wallpaper stars and clouds, constellation reward
 js/terminal-commands.js   the simulated shell: virtual files and every command
 js/terminal.js        terminal window, history and tab completion
-js/welcome.js         welcome window
+js/welcome.js         welcome window (full on desktop, short on phones)
 js/power.js           loading, log in, sleep, log off and restart screens
 js/cat.js             corner cat
 ```
@@ -38,10 +38,18 @@ listed in `index.html`.
 Projects, certificates, skills, the About text and the flags all live in `js/data.js`.
 Certificate images go in `assets/certs/`, reports in `assets/work/`.
 
-A project with `kind: 'report'` and a `pdf` appears in the Research window. Without a `pdf` it is
-hidden from Research and keeps its simple window in Projects. Optional fields shown only when present:
-`docType`, `year`, `goal`, `approach`, `features`, `findings`, `takeaways`, `screens`, `reflection`,
-`caveat`, `tags`, `references`. Empty fields produce no section.
+Folders live in `categories`, each in a `group` (Cybersecurity or Personal Projects). Every project
+opens as a detail view inside the Projects explorer, drawn by `js/detail.js`. Optional fields are
+shown only when present: `docType`, `year`, `goal`, `approach`, `features`, `findings`,
+`takeaways`, `screens`, `reflection`, `caveat`, `tags`, `references`, plus `pdf` and `links` for
+buttons. A PDF opens in its own reader window, never inline in the details.
+
+A skill counts as demonstrated when it lists `projects` or `certs` ids that exist. A skill with no
+evidence is shown under Currently exploring, so add the ids as soon as there is evidence.
+Certificates have a `type` of `certification` or `programme`.
+
+The Projects app id is `projects`. `work` still works as an alias in `Apps.open`, the terminal
+(`cd work`, `~/work/...`, `open work`) and old links.
 
 ## Networking
 

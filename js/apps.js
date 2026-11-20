@@ -16,22 +16,7 @@
   const paragraph = (text) => (text ? h('p', null, text) : null);
   const buttonLink = ({ href, label }) => externalLink(href, { class: 'btn small' }, label + ' ↗');
   const lines = (value) => [].concat(value).flatMap((text, i) => (i ? [h('br'), text] : [text]));
-  const projectDir = (project) => P.categories.find((c) => c.id === project.category).dir;
-
-  function section(title, ...kids) {
-    const content = kids.flat().filter(Boolean);
-    if (content.length === 0) return null;
-    return h('section', { class: 'detail-sec' }, h('h4', null, title), content);
-  }
-
-  function thumbnail(item) {
-    const picture = item.ico
-      ? mIcon(item.ico, 'thumb-img')
-      : h('img', { class: 'thumb-img', src: item.img, alt: '', draggable: 'false' });
-    return h('div', { class: 'thumb' + (item.tone ? ' t-' + item.tone : '') + ' big' }, picture);
-  }
-
-  function detailWindow({ id, item, dir, windowIcon, showThumbnail, sections }) {
+  function detailWindow({ id, item, dir, windowIcon, sections }) {
     Windows.open(id, {
       ...windowIcon,
       title: item.title,
@@ -42,7 +27,6 @@
         const links = item.links && item.links.length ? item.links : null;
         fill(
           body,
-          showThumbnail ? thumbnail(item) : null,
           h(
             'div',
             { class: 'row-between' },
@@ -62,7 +46,7 @@
       window.open(src, '_blank', 'noopener');
       return;
     }
-    Windows.open('research-pdf-' + project.id, {
+    Windows.open('projects-pdf-' + project.id, {
       title: project.title + ' (PDF)',
       ico: 'file-pdf',
       width: 900,
@@ -93,70 +77,6 @@
     });
   }
 
-  function reportWindow(report) {
-    Windows.open('report-' + report.id, {
-      title: report.title,
-      ico: 'file-pdf',
-      width: 500,
-      dir: '~/work/' + projectDir(report),
-      cmd: `cat ${report.id}.txt`,
-      render(body) {
-        fill(
-          body,
-          h(
-            'div',
-            { class: 'report-head' },
-            mIcon('file-pdf'),
-            h(
-              'div',
-              null,
-              h('h3', null, report.title),
-              h('span', { class: 'pill' }, report.status),
-            ),
-          ),
-          h('p', { class: 'report-hook' }, report.hook || report.overview),
-          report.caveat ? h('p', { class: 'meta' }, report.caveat) : null,
-          tagList(report.tags),
-        );
-      },
-    });
-  }
-
-  function projectSections(project) {
-    const screenshots = project.screens && project.screens.length ? project.screens : null;
-    return [
-      section('Overview', paragraph(project.overview)),
-      section('Goal', paragraph(project.goal)),
-      section('Approach', paragraph(project.approach)),
-      section(project.featuresTitle || 'Features', bulletList(project.features)),
-      section('Key findings', bulletList(project.findings)),
-      section('Security takeaways', bulletList(project.takeaways)),
-      section('Scope and limits', paragraph(project.caveat)),
-      section('Tools and technologies', tagList(project.tags)),
-      section(
-        'Screenshots',
-        screenshots &&
-          h(
-            'div',
-            { class: 'shots' },
-            screenshots.map((shot) => h('img', { src: shot.src, alt: shot.alt || project.title })),
-          ),
-      ),
-    ];
-  }
-
-  function projectWindow(project) {
-    if (project.kind === 'report') return reportWindow(project);
-    detailWindow({
-      id: 'project-' + project.id,
-      item: project,
-      dir: '~/work/' + projectDir(project),
-      windowIcon: { ico: project.ico, img: project.img },
-      showThumbnail: true,
-      sections: projectSections(project),
-    });
-  }
-
   function certWindow(cert) {
     const image = cert.img
       ? h('img', { class: 'cert-full', src: cert.img, alt: cert.title + ' certificate' })
@@ -171,7 +91,6 @@
       item: cert,
       dir: '~/certs',
       windowIcon: { ico: cert.ico || 'certs' },
-      showThumbnail: false,
       sections: [h('p', { class: 'lead' }, cert.issuer), image, facts],
     });
   }
@@ -190,6 +109,18 @@
     );
   }
 
+  function certSection(title, type) {
+    const certs = P.certs.filter((cert) => cert.type === type);
+    return certs.length
+      ? h(
+          'section',
+          { class: 'cert-sec' },
+          h('h3', null, title),
+          h('div', { class: 'cert-grid' }, certs.map(certTile)),
+        )
+      : null;
+  }
+
   function openCerts() {
     Windows.open('certs', {
       title: 'Certs',
@@ -198,7 +129,11 @@
       dir: '~/certs',
       cmd: 'ls -l',
       render(body) {
-        fill(body, h('div', { class: 'cert-grid' }, P.certs.map(certTile)));
+        fill(
+          body,
+          certSection('Certifications', 'certification'),
+          certSection('Experience & Programmes', 'programme'),
+        );
       },
     });
     Bus.emit('open:certs');
@@ -261,24 +196,26 @@
 
   const openers = {
     terminal: () => Terminal.open(),
-    work: () => Explorer.open(),
+    projects: () => Explorer.open(),
     certs: openCerts,
     skills: () => Skills.open(),
-    research: () => Research.open(),
     about: openAbout,
     contact: openContact,
     flags: () => Flags.showPanel(),
   };
+  const ALIASES = { work: 'projects' };
 
   window.Apps = {
     open(id) {
-      openers[id]?.();
+      openers[ALIASES[id] || id]?.();
     },
     project(id) {
       const project = P.projects.find((candidate) => candidate.id === id);
-      if (project.kind === 'networking') Explorer.open([project.category, project.id]);
-      else if (Research.lists(project)) Research.open(project.id);
-      else projectWindow(project);
+      if (project) Explorer.open([project.category, project.id]);
+    },
+    cert(id) {
+      const cert = P.certs.find((candidate) => candidate.id === id);
+      if (cert) certWindow(cert);
     },
     pdf: pdfWindow,
     ui: { paragraph, bulletList, tagList },

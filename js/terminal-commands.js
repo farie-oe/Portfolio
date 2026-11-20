@@ -6,6 +6,7 @@
     .filter((app) => app.id !== 'terminal' && app.id !== 'flags')
     .map((app) => app.id);
 
+  const LEGACY_PROJECTS_DIR = 'work';
   const HELP_NAME_WIDTH = 16;
   const PROJECT_NAME_WIDTH = 24;
   const MAX_TYPO_DISTANCE = 2;
@@ -50,7 +51,7 @@
       title: 'Around the terminal',
       rows: [
         'ls [-la] [dir]  list files; -a shows hidden ones',
-        'cd <dir>        change directory (cd .., cd work, cd certs)',
+        'cd <dir>        change directory (cd .., cd projects, cd certs)',
         'cat <file>      read a file, e.g. cat about.txt',
         'pwd             where am I?',
         'open <window>   open: ' + WINDOW_APPS.join(', '),
@@ -70,11 +71,11 @@
 
   const tree = {
     [HOME]: {
-      dirs: ['work', 'certs'],
+      dirs: ['projects', 'certs'],
       files: ['about.txt', 'skills.txt', 'contact.txt', 'note.txt'],
       hidden: ['.secret'],
     },
-    '~/work': { dirs: P.categories.map((category) => category.dir), files: [] },
+    '~/projects': { dirs: P.categories.map((category) => category.dir), files: [] },
     '~/certs': { dirs: [], files: P.certs.map((cert) => cert.id + '.txt') },
   };
   const readers = {};
@@ -104,9 +105,9 @@
 
   P.categories.forEach((category) => {
     const projects = P.projects.filter((project) => project.category === category.id);
-    tree[`~/work/${category.dir}`] = { dirs: [], files: projects.map((p) => p.id + '.txt') };
+    tree[`~/projects/${category.dir}`] = { dirs: [], files: projects.map((p) => p.id + '.txt') };
     projects.forEach((project) => {
-      readers[`~/work/${category.dir}/${project.id}.txt`] = () => projectLines(project);
+      readers[`~/projects/${category.dir}/${project.id}.txt`] = () => projectLines(project);
     });
   });
   P.certs.forEach((cert) => {
@@ -114,11 +115,18 @@
   });
 
   readers['~/about.txt'] = () => [[P.about.greeting, 'strong'], ...P.about.paragraphs];
-  readers['~/skills.txt'] = () =>
-    P.skills.flatMap((group) => [
-      [group.group, 'strong'],
-      '  ' + group.items.map((skill) => skill.name).join(', '),
+  readers['~/skills.txt'] = () => {
+    const { demonstrated, exploring } = Skills.partition();
+    return [
+      ['Demonstrated skills', demonstrated],
+      ['Currently exploring', exploring],
+    ].flatMap(([title, groups]) => [
+      [title, 'strong'],
+      ...groups.map(
+        (group) => `  ${group.group}: ${group.items.map((skill) => skill.name).join(', ')}`,
+      ),
     ]);
+  };
   readers['~/contact.txt'] = () =>
     P.contact.links.map((link) => `${link.label.padEnd(9)} ${link.value}`);
   readers['~/note.txt'] = () => [
@@ -138,6 +146,7 @@
       if (part !== '..') resolved.push(part);
       else if (resolved.length > 1) resolved.pop();
     });
+    if (resolved[1] === LEGACY_PROJECTS_DIR) resolved[1] = 'projects';
     return resolved.join('/');
   }
 
@@ -283,11 +292,18 @@
       printLines(ctx, readers['~/about.txt']());
     },
     skills(ctx) {
-      P.skills.forEach((group) => {
-        ctx.print(group.group, 'strong');
-        group.items.forEach((skill) => {
-          const detail = skill.sub ? ': ' + skill.sub.join(', ') : '';
-          ctx.print('  - ' + skill.name + detail);
+      const { demonstrated, exploring } = Skills.partition();
+      [
+        ['Demonstrated skills', demonstrated],
+        ['Currently exploring', exploring],
+      ].forEach(([title, groups]) => {
+        ctx.print(title, 'strong');
+        groups.forEach((group) => {
+          ctx.print('  ' + group.group, 'dim');
+          group.items.forEach((skill) => {
+            const detail = skill.sub ? ': ' + skill.sub.join(', ') : '';
+            ctx.print('    - ' + skill.name + detail);
+          });
         });
       });
     },
@@ -297,14 +313,14 @@
     },
     certifications(ctx) {
       ctx.print('Certifications', 'strong');
-      P.certs.forEach((cert) =>
-        ctx.row('  [x] ', cert.title, 'cat ' + cert.id, `(${cert.issuer})`, 2),
-      );
+      P.certs
+        .filter((cert) => cert.type === 'certification')
+        .forEach((cert) => ctx.row('  [x] ', cert.title, 'cat ' + cert.id, `(${cert.issuer})`, 2));
       ctx.print('Pick one to see the details.', 'dim');
     },
     experience(ctx) {
-      ctx.print('Experience and programs', 'strong');
-      const completed = P.certs.filter((cert) => cert.status === 'Completed');
+      ctx.print('Experience & Programmes', 'strong');
+      const completed = P.certs.filter((cert) => cert.type === 'programme');
       if (completed.length === 0) return ctx.print('Nothing listed yet.', 'dim');
       completed.forEach((cert) => {
         ctx.row('  - ', cert.title, 'cat ' + cert.id, `(${cert.issuer})`, 2);
@@ -384,7 +400,7 @@
       printLines(ctx, read());
     },
     open(ctx, arg) {
-      if (WINDOW_APPS.includes(arg)) return Apps.open(arg);
+      if (WINDOW_APPS.includes(arg) || arg === LEGACY_PROJECTS_DIR) return Apps.open(arg);
       const message = arg
         ? `open: no such window "${arg}"`
         : 'open: which one? ' + WINDOW_APPS.join(', ');

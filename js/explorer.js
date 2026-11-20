@@ -2,7 +2,7 @@
   const P = PORTFOLIO;
   const DEFAULT_COLOUR = 'butter';
   const MENU_MARGIN = 8;
-  const DETAIL_DEPTH = 3;
+  const DOCUMENT_DEPTH = 3;
   const HOME_LABEL = 'Projects';
   const SWATCH = {
     butter: '#F3D78A',
@@ -24,26 +24,34 @@
 
   const folders = () => P.categories;
   const folderById = (id) => folders().find((folder) => folder.id === id);
+  const foldersIn = (groupId) => folders().filter((folder) => folder.group === groupId);
   const projectById = (id) => P.projects.find((project) => project.id === id);
   const filesIn = (folderId) => P.projects.filter((project) => project.category === folderId);
+  const isFolderProject = (project) => Boolean(project.networking);
+  const isPhone = () => matchMedia('(max-width: 640px)').matches;
   const colourOf = (folder) =>
     (Store.state.colors && Store.state.colors[folder.id]) || folder.color || DEFAULT_COLOUR;
   const folderIcon = (colour) =>
     `icons/folder-${COLOURS.includes(colour) ? colour : DEFAULT_COLOUR}.png`;
   const colourName = (colour) => colour.replace('-', ' ');
   const samePath = (a, b) => a.join('/') === b.join('/');
-  const isDetail = (path) => path.length === DETAIL_DEPTH;
+
+  function isDetail(path) {
+    if (path.length === DOCUMENT_DEPTH) return true;
+    return path.length === 2 && !isFolderProject(projectById(path[1]));
+  }
 
   function validPath(path) {
     const [rootId, projectId, key] = path;
     if (rootId === undefined) return [];
     if (!folderById(rootId)) return [folders()[0].id];
     const project = projectId && projectById(projectId);
-    if (!project || !project.networking || project.category !== rootId) return [rootId];
+    if (!project || project.category !== rootId) return [rootId];
+    if (!isFolderProject(project)) return [rootId, projectId];
     if (key && !Networking.entries(project.networking).some((entry) => entry.key === key)) {
       return [rootId, projectId];
     }
-    return path.slice(0, key ? DETAIL_DEPTH : 2);
+    return path.slice(0, key ? DOCUMENT_DEPTH : 2);
   }
 
   function setColour(folderId, colour) {
@@ -53,31 +61,31 @@
     draw();
   }
 
+  function show(path) {
+    nav.path = path;
+    draw();
+    ui.main.scrollTop = 0;
+  }
+
   function go(path) {
     const target = validPath(path);
     if (!samePath(target, nav.path)) {
       nav.back.push(nav.path);
       nav.forward = [];
     }
-    nav.path = target;
-    draw();
-    ui.main.scrollTop = 0;
+    show(target);
   }
 
   function goBack() {
     if (!nav.back.length) return;
     nav.forward.push(nav.path);
-    nav.path = nav.back.pop();
-    draw();
-    ui.main.scrollTop = 0;
+    show(nav.back.pop());
   }
 
   function goForward() {
     if (!nav.forward.length) return;
     nav.back.push(nav.path);
-    nav.path = nav.forward.pop();
-    draw();
-    ui.main.scrollTop = 0;
+    show(nav.forward.pop());
   }
 
   function chevron(direction) {
@@ -99,24 +107,27 @@
 
   function entriesFor(path) {
     if (path.length === 0) {
-      return folders().map((folder) => ({
-        kind: 'folder',
-        label: folder.label,
-        colour: colourOf(folder),
-        path: [folder.id],
-      }));
+      return P.groups.flatMap((group) => [
+        { kind: 'heading', label: group.label },
+        ...foldersIn(group.id).map((folder) => ({
+          kind: 'folder',
+          label: folder.label,
+          colour: colourOf(folder),
+          path: [folder.id],
+        })),
+      ]);
     }
     const root = folderById(path[0]);
     if (path.length === 1) {
       return filesIn(root.id).map((project) =>
-        project.networking
+        isFolderProject(project)
           ? {
               kind: 'folder',
               label: project.title,
               colour: colourOf(root),
               path: [root.id, project.id],
             }
-          : { kind: 'project', label: project.title, project },
+          : { kind: 'file', label: project.title, project, path: [root.id, project.id] },
       );
     }
     const project = projectById(path[1]);
@@ -134,7 +145,7 @@
     if (path.length >= 2) {
       trail.push({ label: projectById(path[1]).title, path: path.slice(0, 2) });
     }
-    if (path.length >= DETAIL_DEPTH) {
+    if (path.length >= DOCUMENT_DEPTH) {
       const entry = Networking.entries(projectById(path[1]).networking).find(
         (candidate) => candidate.key === path[2],
       );
@@ -181,8 +192,10 @@
 
   function drawSidebar() {
     ui.side.replaceChildren(
-      h('h4', { class: 'fx-side-title' }, 'Folders'),
-      ...folders().map(sidebarRow),
+      ...P.groups.flatMap((group) => [
+        h('h4', { class: 'fx-side-title' }, group.label),
+        ...foldersIn(group.id).map(sidebarRow),
+      ]),
     );
   }
 
@@ -233,7 +246,7 @@
       backButton,
       forwardButton,
       title,
-      nav.path.length ? colourButton(folderById(nav.path[0])) : null,
+      ...(nav.path.length ? [colourButton(folderById(nav.path[0]))] : []),
     );
   }
 
@@ -252,19 +265,16 @@
         draggable: 'false',
       });
     }
-    return entry.kind === 'project' ? projectIcon(entry.project) : mIcon(entry.icon, 'fx-ico');
-  }
-
-  function entryAction(entry) {
-    return entry.kind === 'project' ? () => Apps.project(entry.project.id) : () => go(entry.path);
+    return entry.kind === 'file' ? projectIcon(entry.project) : mIcon(entry.icon, 'fx-ico');
   }
 
   function entryLabel(entry) {
-    if (entry.kind === 'project') return `${entry.label}, ${entry.project.status}`;
+    if (entry.kind === 'file') return `${entry.label}, ${entry.project.status}`;
     return entry.kind === 'folder' ? `${entry.label}, folder` : entry.label;
   }
 
   function entryCell(entry) {
+    if (entry.kind === 'heading') return h('h4', { class: 'fx-group' }, entry.label);
     return h(
       'div',
       { class: 'fx-cell' },
@@ -274,7 +284,7 @@
           class: 'fx-item',
           type: 'button',
           'aria-label': entryLabel(entry),
-          onclick: entryAction(entry),
+          onclick: () => go(entry.path),
         },
         entryIcon(entry),
         h('span', { class: 'fx-name' }, entry.label),
@@ -282,12 +292,18 @@
     );
   }
 
+  function detailView(path) {
+    const project = projectById(path[1]);
+    return path.length === DOCUMENT_DEPTH
+      ? Networking.view(project.networking, path[2])
+      : Detail.view(project);
+  }
+
   function drawFiles() {
     const detail = isDetail(nav.path);
     ui.main.classList.toggle('fx-detail', detail);
     if (detail) {
-      const project = projectById(nav.path[1]);
-      ui.main.replaceChildren(Networking.view(project.networking, nav.path[2]));
+      ui.main.replaceChildren(detailView(nav.path));
       return;
     }
     const entries = entriesFor(nav.path);
@@ -309,7 +325,7 @@
       ui.status.replaceChildren(h('span', null, crumbsFor(nav.path).pop().label));
       return;
     }
-    const count = entriesFor(nav.path).length;
+    const count = entriesFor(nav.path).filter((entry) => entry.kind !== 'heading').length;
     ui.status.replaceChildren(h('span', null, `${count} item${count === 1 ? '' : 's'}`));
   }
 
@@ -378,13 +394,14 @@
   }
 
   function open(path) {
-    if (Windows.isOpen('work')) {
-      Windows.open('work', {});
+    if (Windows.isOpen('projects')) {
+      Windows.open('projects', {});
       if (path) go(path);
       return;
     }
-    nav = { path: validPath(path || [folders()[0].id]), back: [], forward: [] };
-    Windows.open('work', {
+    const start = path || (isPhone() ? [] : [folders()[0].id]);
+    nav = { path: validPath(start), back: [], forward: [] };
+    Windows.open('projects', {
       title: 'Projects',
       ico: 'work',
       width: 800,

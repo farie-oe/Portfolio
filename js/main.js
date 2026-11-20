@@ -2,8 +2,7 @@
   const P = PORTFOLIO;
   const $ = (id) => document.getElementById(id);
 
-  const WELCOME_MIN_WIDTH = 900;
-  const OWNED_WINDOW_PREFIXES = { work: ['project-', 'report-'], certs: ['cert-'] };
+  const OWNED_WINDOW_PREFIXES = { certs: ['cert-'] };
   const DESKTOP_APPS = P.apps.filter((app) => app.desk);
   const DOCK_APPS = P.apps.filter((app) => !app.desk);
 
@@ -129,7 +128,7 @@
         announced = true;
         Bus.emit('boot');
       }
-      if (isFreshLogin && innerWidth >= WELCOME_MIN_WIDTH) setTimeout(() => Welcome.open(), 450);
+      if (isFreshLogin) setTimeout(() => Welcome.open(), 450);
     };
   }
 

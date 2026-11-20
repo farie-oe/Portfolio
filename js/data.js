@@ -9,7 +9,7 @@ window.PORTFOLIO = {
 
   apps: [
     { id: 'terminal', label: 'Terminal', ico: 'terminal', desk: true },
-    { id: 'work', label: 'Projects', ico: 'work', desk: true },
+    { id: 'projects', label: 'Projects', ico: 'work', desk: true },
     { id: 'certs', label: 'Certs', ico: 'certs', desk: true },
     { id: 'skills', label: 'Skills', ico: 'skills', desk: true },
     { id: 'about', label: 'About', ico: 'about' },
@@ -17,10 +17,32 @@ window.PORTFOLIO = {
     { id: 'flags', label: 'Flag Hunt', ico: 'flag' },
   ],
 
+  groups: [
+    { id: 'cybersecurity', label: 'Cybersecurity' },
+    { id: 'personal', label: 'Personal Projects' },
+  ],
   categories: [
-    { id: 'security', label: 'Research & Analysis', dir: 'research-and-analysis', color: 'pink' },
-    { id: 'networking', label: 'Networking Labs', dir: 'networking-labs', color: 'sky' },
-    { id: 'fun', label: 'Technical Projects', dir: 'technical-projects', color: 'butter' },
+    {
+      id: 'security',
+      label: 'Research & Analysis',
+      dir: 'research-and-analysis',
+      group: 'cybersecurity',
+      color: 'pink',
+    },
+    {
+      id: 'networking',
+      label: 'Networking Labs',
+      dir: 'networking-labs',
+      group: 'cybersecurity',
+      color: 'sky',
+    },
+    {
+      id: 'fun',
+      label: 'Technical Projects',
+      dir: 'technical-projects',
+      group: 'personal',
+      color: 'butter',
+    },
   ],
   projects: [
     {
@@ -115,6 +137,7 @@ window.PORTFOLIO = {
   certs: [
     {
       id: 'isc2-cc',
+      type: 'certification',
       title: 'Certified in Cybersecurity (CC)',
       issuer: 'ISC2',
       ico: 'shield',
@@ -132,6 +155,7 @@ window.PORTFOLIO = {
     },
     {
       id: 'deloitte-sim',
+      type: 'programme',
       title: 'Deloitte Cyber Job Simulation',
       issuer: 'Deloitte, via Forage',
       ico: 'badge',
@@ -148,6 +172,7 @@ window.PORTFOLIO = {
     },
     {
       id: 'cisco-mentorme',
+      type: 'programme',
       title: 'Cisco MentorMe Program 2026',
       issuer: 'Cisco',
       img: 'assets/certs/cisco-mentorme.jpg',
@@ -183,15 +208,15 @@ window.PORTFOLIO = {
             'Risk treatment and budgeting',
             'Risk appetite and acceptance',
             'Compliance mapping',
-            'Incident response',
-            'Business impact analysis (BIA)',
-            'Business continuity',
             'ISO 31000',
             'ISO/IEC 27001',
             'NIST SP 800-30',
           ],
         },
         { name: 'Cyber security fundamentals', certs: ['isc2-cc'] },
+        { name: 'Incident response' },
+        { name: 'Business impact analysis (BIA)' },
+        { name: 'Business continuity' },
       ],
     },
     {
@@ -212,7 +237,7 @@ window.PORTFOLIO = {
       ],
     },
     {
-      group: 'Web development, for fun',
+      group: 'Web development',
       note: 'I build these to learn and play, not as my main focus.',
       items: [
         { name: 'HTML & CSS', projects: ['yunori-world', 'imi-desktop'] },
@@ -220,7 +245,7 @@ window.PORTFOLIO = {
         { name: 'React', projects: ['yunori-world', 'imi-desktop'] },
         { name: 'SVG & animation' },
         { name: 'Supabase', projects: ['yunori-world'] },
-        { name: 'Git & GitHub' },
+        { name: 'Git & GitHub', projects: ['yunori-world', 'imi-desktop'] },
       ],
     },
   ],
