@@ -1916,6 +1916,42 @@ button.skill-pill {
   transform: translateY(2px);
   box-shadow: 0 1px 0 var(--accent-shadow);
 }
+@media (min-width: 641px) and (max-height: 745px) {
+  .welcome-hero {
+    height: 72px;
+    margin-bottom: var(--s-2);
+  }
+  .welcome-kitten-ico {
+    width: 64px;
+    height: 64px;
+  }
+  .welcome-title {
+    margin-bottom: var(--s-2);
+  }
+  .welcome .welcome-intro,
+  .welcome-chips {
+    margin-bottom: var(--s-3);
+  }
+  .welcome .btn-row {
+    margin-top: var(--s-3);
+  }
+}
+@media (min-width: 641px) and (max-height: 685px) {
+  .welcome-chips {
+    display: none;
+  }
+}
+@media (min-width: 641px) and (max-height: 640px) {
+  .welcome .welcome-outside {
+    display: none;
+  }
+}
+@media (min-width: 641px) and (max-height: 560px) {
+  .welcome-hero,
+  .welcome .welcome-flag {
+    display: none;
+  }
+}
 
 .dock-item.temp {
   animation: dock-in 0.35s cubic-bezier(0.3, 1.4, 0.5, 1) both;
