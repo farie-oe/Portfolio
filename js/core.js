@@ -71,7 +71,7 @@
     return h('a', { href, target: '_blank', rel: 'noopener noreferrer', ...attrs }, ...kids);
   }
 
-  const SVG_ICONS = ['network', 'study', 'shield', 'badge'];
+  const SVG_ICONS = ['network', 'shield', 'badge'];
   const iconSrc = (name) => `icons/${name}.${SVG_ICONS.includes(name) ? 'svg' : 'png'}`;
 
   function icon(src, cls) {
