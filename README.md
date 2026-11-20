@@ -14,9 +14,10 @@ js/data.js            every piece of content: apps, projects, certs, skills, fla
 js/core.js            small shared helpers: event bus, saved state, DOM builder, popup menus
 js/windows.js         window manager: open, close, minimise, drag, full size
 js/main.js            start-up, desktop icons, dock, clock
-js/apps.js            Work details, Certs, About and Contact windows
+js/apps.js            Project details, Certs, About and Contact windows
+js/research.js        Research window: report cards and the in-window detail view
 js/skills.js          Skills window
-js/explorer.js        Work file explorer
+js/explorer.js        Projects file explorer
 js/flags.js           flag hunt state and the Flag Hunt panel
 js/sky.js             wallpaper stars and clouds, constellation reward
 js/terminal-commands.js   the simulated shell: virtual files and every command
@@ -33,6 +34,11 @@ listed in `index.html`.
 
 Projects, certificates, skills, the About text and the flags all live in `js/data.js`.
 Certificate images go in `assets/certs/`, reports in `assets/work/`.
+
+A project with `kind: 'report'` and a `pdf` appears in the Research window. Without a `pdf` it is
+hidden from Research and keeps its simple window in Projects. Optional fields shown only when present:
+`docType`, `year`, `goal`, `approach`, `features`, `findings`, `takeaways`, `screens`, `reflection`,
+`caveat`, `tags`, `references`. Empty fields produce no section.
 
 ## Formatting
 

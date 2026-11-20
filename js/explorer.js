@@ -264,7 +264,7 @@
     }
     nav = { current: folders()[0].id, back: [], forward: [] };
     Windows.open('work', {
-      title: 'Work',
+      title: 'Projects',
       ico: 'work',
       width: 800,
       onClose() {

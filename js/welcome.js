@@ -19,9 +19,6 @@
       'div',
       { class: 'welcome-hero' },
       h('span', { class: 'welcome-kitten' }, mIcon('about', 'welcome-kitten-ico')),
-      ['s1', 's2', 's3'].map((position) =>
-        h('span', { class: `welcome-spark ${position}`, 'aria-hidden': 'true' }),
-      ),
     );
   }
 
@@ -34,7 +31,7 @@
       render(body, win) {
         const startButton = h(
           'button',
-          { class: 'btn', type: 'button', onclick: () => Windows.close('welcome') },
+          { class: 'btn welcome-start', type: 'button', onclick: () => Windows.close('welcome') },
           'Start exploring',
         );
         body.append(
@@ -43,12 +40,16 @@
             { class: 'welcome' },
             hero(),
             h('h3', { class: 'welcome-title' }, 'Welcome to my portfolio!'),
-            h('p', null, "Hi, I'm Mafaro, a cybersecurity student with experience in:"),
+            h(
+              'p',
+              { class: 'welcome-intro' },
+              "Hi, I'm Mafaro, a cybersecurity student. This portfolio brings together my work and learning across cryptography, networking, secure software development and GRC.",
+            ),
             h('div', { class: 'welcome-chips' }, SKILLS.map(skillChip)),
             h(
               'p',
-              null,
-              'I love mixing security with cuteness, and I build side projects that show off my love for design.',
+              { class: 'welcome-outside' },
+              'Alongside my cybersecurity work, I also enjoy building personal web projects, experimenting with design and exploring creative ideas.',
             ),
             h(
               'p',
@@ -57,7 +58,7 @@
               h(
                 'span',
                 null,
-                'Explore around and try to capture the flags while you are at it. Have fun!',
+                'Take a look around, explore my work, and see if you can find all the hidden flags!',
               ),
             ),
             h('div', { class: 'btn-row' }, startButton),

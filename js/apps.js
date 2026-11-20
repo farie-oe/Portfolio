@@ -62,10 +62,10 @@
       window.open(src, '_blank', 'noopener');
       return;
     }
-    Windows.open('pdf-' + project.id, {
+    Windows.open('research-pdf-' + project.id, {
       title: project.title + ' (PDF)',
       ico: 'file-pdf',
-      width: 820,
+      width: 900,
       render(body) {
         body.classList.add('pdf-body');
         const fallback = h(
@@ -77,6 +77,7 @@
         );
         fill(
           body,
+          h('div', { class: 'pdf-bar' }, buttonLink({ label: 'Open in new tab', href: src })),
           h(
             'object',
             {
@@ -93,18 +94,6 @@
   }
 
   function reportWindow(report) {
-    const actions = report.pdf
-      ? h(
-          'div',
-          { class: 'btn-row' },
-          h(
-            'button',
-            { class: 'btn', type: 'button', onclick: () => pdfWindow(report) },
-            'Read more',
-          ),
-          buttonLink({ label: 'Open in new tab', href: report.pdf.src }),
-        )
-      : null;
     Windows.open('report-' + report.id, {
       title: report.title,
       ico: 'file-pdf',
@@ -128,7 +117,6 @@
           h('p', { class: 'report-hook' }, report.hook || report.overview),
           report.caveat ? h('p', { class: 'meta' }, report.caveat) : null,
           tagList(report.tags),
-          actions,
         );
       },
     });
@@ -276,6 +264,7 @@
     work: () => Explorer.open(),
     certs: openCerts,
     skills: () => Skills.open(),
+    research: () => Research.open(),
     about: openAbout,
     contact: openContact,
     flags: () => Flags.showPanel(),
@@ -286,7 +275,11 @@
       openers[id]?.();
     },
     project(id) {
-      projectWindow(P.projects.find((project) => project.id === id));
+      const project = P.projects.find((candidate) => candidate.id === id);
+      if (Research.lists(project)) Research.open(project.id);
+      else projectWindow(project);
     },
+    pdf: pdfWindow,
+    ui: { paragraph, bulletList, tagList },
   };
 })();

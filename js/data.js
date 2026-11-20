@@ -9,7 +9,7 @@ window.PORTFOLIO = {
 
   apps: [
     { id: 'terminal', label: 'Terminal', ico: 'terminal', desk: true },
-    { id: 'work', label: 'Work', ico: 'work', desk: true },
+    { id: 'work', label: 'Projects', ico: 'work', desk: true },
     { id: 'certs', label: 'Certs', ico: 'certs', desk: true },
     { id: 'skills', label: 'Skills', ico: 'skills', desk: true },
     { id: 'about', label: 'About', ico: 'about' },
@@ -18,17 +18,19 @@ window.PORTFOLIO = {
   ],
 
   categories: [
-    { id: 'security', label: 'Research and Reports', dir: 'research-and-reports', color: 'pink' },
+    { id: 'security', label: 'Research & Analysis', dir: 'research-and-analysis', color: 'pink' },
     { id: 'networking', label: 'Networking', dir: 'networking', color: 'sky' },
-    { id: 'fun', label: 'Fun Projects', dir: 'fun-projects', color: 'butter' },
+    { id: 'fun', label: 'Technical Projects', dir: 'technical-projects', color: 'butter' },
   ],
   projects: [
     {
       id: 'grc-report',
       category: 'security',
-      title: 'GRC Risk Assessment',
+      title: 'Northern Minerals Limited Risk Assessment',
       kind: 'report',
       status: 'Report',
+      docType: 'Risk Assessment',
+      year: 2026,
       hook: "Have you ever wondered what a mining company's biggest security risks really are, and what it would cost to fix them? I took Northern Minerals, a rare earths developer, and worked it out from public information alone. This is what I found: ransomware and state-sponsored data theft were the two Critical risks, and the board itself was a risk, because three of its four directors are executives. A funded plan costing A$292,000 in Year 1 would remove both Critical ratings.",
       overview:
         "A hypothetical governance, risk and compliance risk assessment of Northern Minerals Limited's Browns Range heavy rare earths project, built from public information. It is independent portfolio work and is not affiliated with the company.",
@@ -66,17 +68,6 @@ window.PORTFOLIO = {
         'GRC',
       ],
       pdf: { label: 'Read the report', src: 'assets/work/northern-minerals-risk-assessment.pdf' },
-      links: [],
-    },
-    {
-      id: 'crypto-paper',
-      category: 'security',
-      title: 'Cryptographic Algorithms',
-      kind: 'report',
-      status: 'Research paper',
-      overview:
-        'A study of cryptographic algorithms, their underlying principles, and their roles in protecting information.',
-      tags: ['Cryptography', 'Research'],
       links: [],
     },
     {
@@ -190,7 +181,7 @@ window.PORTFOLIO = {
     {
       group: 'Security',
       items: [
-        { name: 'Cryptography', projects: ['crypto-paper'] },
+        { name: 'Cryptography' },
         { name: 'Secure coding' },
         {
           name: 'GRC',
