@@ -2,6 +2,9 @@
   const wins = new Map();
   const MOBILE_BREAKPOINT = 640;
   const EDGE_GAP = 8;
+  const DOCK_GAP = 8;
+  const MIN_ROOM = 160;
+  const STAGGER = 10;
   let topZ = 10;
   let spawned = 0;
 
@@ -38,6 +41,7 @@
     if (!win) return;
     win.el.classList.remove('min');
     win.el.hidden = false;
+    fitAboveDock(win);
     focus(id);
     Bus.emit('win:change');
   }
@@ -112,7 +116,10 @@
   function createWindow(id, opts) {
     const { title } = opts;
     const body = h('div', { class: 'win-body' });
-    const toggleSize = () => el.classList.toggle('max');
+    const toggleSize = () => {
+      el.classList.toggle('max');
+      if (!el.classList.contains('max')) fitAboveDock(wins.get(id));
+    };
     const lights = h(
       'div',
       { class: 'lights' },
@@ -158,11 +165,39 @@
     const host = layer().getBoundingClientRect();
     const mobile = isMobileLayout();
     const fitted = Math.min(width, host.width - 16);
-    const step = (spawned++ % 6) * 30;
+    const rank = spawned++ % 6;
+    const step = rank * 30;
     const clearOfIcons = Math.min(150 + step, Math.max(EDGE_GAP, host.width - fitted - EDGE_GAP));
     el.style.width = fitted + 'px';
     el.style.left = (mobile ? EDGE_GAP : clearOfIcons) + 'px';
     el.style.top = (mobile ? 88 + step / 2 : 24 + step) + 'px';
+    return rank;
+  }
+
+  function floorY() {
+    const host = layer().getBoundingClientRect();
+    const dock = document.getElementById('dock').getBoundingClientRect();
+    const dockTop = dock.height > 0 ? dock.top : host.bottom;
+    return Math.max(EDGE_GAP * 2, Math.min(host.bottom, dockTop) - host.top - DOCK_GAP);
+  }
+
+  function updateFloor() {
+    layer().style.setProperty('--floor', floorY() + 'px');
+  }
+
+  function fitAboveDock(win) {
+    const { el, body } = win;
+    if (el.classList.contains('max') || el.hidden) return;
+    updateFloor();
+    el.style.removeProperty('--room');
+    const floor = floorY();
+    const height = el.offsetHeight;
+    const chrome = height - body.offsetHeight;
+    const top = parseFloat(el.style.top) || 0;
+    const lifted = floor - height - win.rank * STAGGER;
+    const next = Math.max(top + height > floor ? lifted : top, EDGE_GAP);
+    el.style.top = next + 'px';
+    el.style.setProperty('--room', Math.max(MIN_ROOM, floor - next - chrome) + 'px');
   }
 
   function centre(el) {
@@ -188,16 +223,18 @@
     const { width = 440, cmd, dir = '~', center, render, onClose } = opts;
     const opener = previouslyFocused();
     const { el, bar, body } = createWindow(id, opts);
-    placeCascading(el, width);
+    updateFloor();
+    const rank = placeCascading(el, width);
     layer().append(el);
     el.addEventListener('pointerdown', () => focus(id));
     enableDrag(el, bar);
 
-    const win = { el, body, onClose, opener };
+    const win = { el, body, onClose, opener, rank };
     wins.set(id, win);
     render(body, win);
     if (cmd) addPrompts(body, dir, cmd);
     if (center) centre(el);
+    fitAboveDock(win);
 
     focus(id);
     if (!win.input) el.focus({ preventScroll: true });
@@ -205,7 +242,12 @@
     return win;
   }
 
-  addEventListener('resize', () => wins.forEach((win) => keepTitleBarReachable(win.el)));
+  addEventListener('resize', () =>
+    wins.forEach((win) => {
+      fitAboveDock(win);
+      keepTitleBarReachable(win.el);
+    }),
+  );
 
   const ids = () => [...wins.keys()];
 

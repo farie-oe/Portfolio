@@ -498,7 +498,7 @@ a {
   left: 8px !important;
   top: 8px !important;
   width: calc(100% - 16px) !important;
-  height: calc(100% - 100px);
+  height: calc(var(--floor, calc(100% - 92px)) - 8px);
 }
 .win.max .win-body {
   max-height: none;
@@ -584,7 +584,7 @@ a {
 .win-body {
   padding: var(--s-5);
   overflow: auto;
-  max-height: calc(100dvh - 215px);
+  max-height: min(calc(100dvh - 215px), var(--room, 100dvh));
   scrollbar-width: thin;
   scrollbar-color: var(--line) transparent;
 }
@@ -882,7 +882,7 @@ a {
   padding: 0;
   overflow: hidden;
   height: min(82dvh, 900px);
-  max-height: none;
+  max-height: var(--room, none);
 }
 .pdf-bar {
   display: flex;
@@ -1502,7 +1502,7 @@ button.skill-pill {
     height: 50px;
   }
   .win-body {
-    max-height: calc(100dvh - 250px);
+    max-height: min(calc(100dvh - 250px), var(--room, 100dvh));
     padding: var(--s-4);
   }
   .term-input {
@@ -1941,7 +1941,7 @@ button.skill-pill {
   overflow: hidden;
   display: flex;
   height: min(500px, calc(100dvh - 215px));
-  max-height: none;
+  max-height: var(--room, none);
 }
 .fx {
   flex: 1;
