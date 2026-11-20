@@ -19,7 +19,7 @@ window.PORTFOLIO = {
 
   categories: [
     { id: 'security', label: 'Research & Analysis', dir: 'research-and-analysis', color: 'pink' },
-    { id: 'networking', label: 'Networking', dir: 'networking', color: 'sky' },
+    { id: 'networking', label: 'Networking Labs', dir: 'networking-labs', color: 'sky' },
     { id: 'fun', label: 'Technical Projects', dir: 'technical-projects', color: 'butter' },
   ],
   projects: [
@@ -68,18 +68,6 @@ window.PORTFOLIO = {
         'GRC',
       ],
       pdf: { label: 'Read the report', src: 'assets/work/northern-minerals-risk-assessment.pdf' },
-      links: [],
-    },
-    {
-      id: 'network-architecture',
-      category: 'networking',
-      title: 'Network Architecture',
-      ico: 'network',
-      tone: 'c',
-      status: 'Lab',
-      overview:
-        'Network designs created in Cisco Packet Tracer, exploring network structure, connectivity, and communication between devices.',
-      tags: ['Cisco Packet Tracer', 'Network architecture'],
       links: [],
     },
     {
@@ -211,7 +199,11 @@ window.PORTFOLIO = {
         { name: 'Wireshark', sub: ['Packet capture', 'Protocol analysis'] },
         {
           name: 'Cisco Packet Tracer',
-          projects: ['network-architecture'],
+          projects: [
+            'networking-addressing-routing',
+            'networking-services',
+            'networking-design-iot',
+          ],
           sub: ['Network design', 'IPv4 addressing', 'Subnetting', 'Routing'],
         },
         { name: 'TCP/IP and troubleshooting' },

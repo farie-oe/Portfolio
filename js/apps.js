@@ -276,7 +276,8 @@
     },
     project(id) {
       const project = P.projects.find((candidate) => candidate.id === id);
-      if (Research.lists(project)) Research.open(project.id);
+      if (project.kind === 'networking') Explorer.open([project.category, project.id]);
+      else if (Research.lists(project)) Research.open(project.id);
       else projectWindow(project);
     },
     pdf: pdfWindow,
